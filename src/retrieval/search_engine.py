@@ -18,25 +18,17 @@ from src.embeddings.chroma_store import (
 
 
 # ── Core Search ───────────────────────────────────────────────────────────────
-
 def semantic_search(
     query: str,
     tickers: list[str] | None = None,
     years: list[str] | None = None,
     top_k: int = 6,
 ) -> list[dict]:
-    """
-    Search ChromaDB for chunks most relevant to the query.
 
-    Args:
-        query:   Natural language question
-        tickers: Optional list of tickers to filter (e.g. ["NVDA", "TSLA"])
-        years:   Optional list of years to filter  (e.g. ["2024", "2025"])
-        top_k:   Number of chunks to return
+    if not query or not query.strip():
+        return []
 
-    Returns:
-        List of result dicts: {text, source, ticker, year, page, score}
-    """
+    # Initialize model and collection
     model      = get_embedding_model(EMBEDDING_MODEL)
     client     = get_chroma_client()
     collection = get_or_create_collection(client)
@@ -46,11 +38,11 @@ def semantic_search(
 
     # Embed the query
     query_embedding = model.encode(
-        query,
+        [query],
         normalize_embeddings=True,
-    ).tolist()
+    )[0].tolist()
 
-    # Build metadata filter (ChromaDB $and / $or syntax)
+    # Build metadata filter
     where_filter = _build_filter(tickers, years)
 
     # Query ChromaDB
@@ -62,13 +54,13 @@ def semantic_search(
     )
 
     # Format results
-    chunks = []
+    chunks    = []
     docs      = results["documents"][0]
     metadatas = results["metadatas"][0]
     distances = results["distances"][0]
 
     for text, meta, distance in zip(docs, metadatas, distances):
-        similarity = 1 - distance   # Convert cosine distance → similarity
+        similarity = 1 - distance
         chunks.append({
             "text":      text,
             "source":    meta.get("source", "Unknown"),

@@ -117,26 +117,29 @@ def main():
     if not st.session_state.messages:
         clicked_question = render_example_questions()
         if clicked_question:
-            st.session_state.messages.append({"role": "user", "content": clicked_question})
+            st.session_state["pending_question"] = clicked_question
             st.rerun()
+
 
     # ── Chat Input ────────────────────────────────────────────────────────────
     user_query = st.chat_input(
         "Ask about SEC filings, earnings, risks, revenue... ",
         disabled=(stats["total_chunks"] == 0),
     )
+    
+    question_to_run = user_query or st.session_state.pop("pending_question", None)
+    if question_to_run:
 
-    if user_query:
         # Display user message
-        st.session_state.messages.append({"role": "user", "content": user_query})
+        st.session_state.messages.append({"role": "user", "content": question_to_run})  # ← fixed
         with st.chat_message("user"):
-            st.markdown(user_query)
+            st.markdown(question_to_run)                                                  # ← fixed
 
         # Generate answer with streaming
         with st.chat_message("assistant"):
             with st.spinner("Searching filings and generating answer..."):
                 answer_stream, source_chunks = retrieve_and_answer(
-                    question=user_query,
+                    question=question_to_run,                                             # ← fixed
                     tickers=filters["selected_tickers"],
                     years=filters["selected_years"],
                     top_k=filters["top_k"],
@@ -154,7 +157,6 @@ def main():
         msg_index = len(st.session_state.messages)
         st.session_state.messages.append({"role": "assistant", "content": answer_text})
         st.session_state.sources_map[msg_index] = source_chunks
-
 
 if __name__ == "__main__":
     main()
