@@ -95,7 +95,7 @@ def render_db_stats(stats: dict):
 
 def render_header():
     """Render the main page header and description."""
-    st.title("📈 Financial RAG Assistant")
+    st.title("📈 SEC Financial Assistant")
     st.caption(
         "Ask questions about SEC filings (10-K/10-Q) for NVDA, TSLA, GOOG and more. "
         "Answers are grounded in actual filings with source citations."
