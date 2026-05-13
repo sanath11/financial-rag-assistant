@@ -94,7 +94,7 @@ nvda-20250126.pdf   (ticker-YYYYMMDD.pdf)
 tsla-20241231.pdf
 goog-20241231.pdf
 ```
-Download free from [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar).
+Downloaded from [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar).
 
 **3. Launch the app**
 ```bash
