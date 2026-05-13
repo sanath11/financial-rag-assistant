@@ -75,8 +75,6 @@ financial-rag-assistant/
 │   ├── llm/gemini_svc.py
 │   ├── retrieval/search_engine.py
 │   └── ui/components.py
-├── .env                           # API keys — DO NOT COMMIT
-├── .env.example
 ├── requirements.txt
 └── streamlit_app.py
 ```
