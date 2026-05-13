@@ -88,13 +88,7 @@ financial-rag-assistant/
 pip install -r requirements.txt
 ```
 
-**2. Add your Gemini API key**
-```bash
-cp .env.example .env
-# Edit .env — get a free key at https://aistudio.google.com/app/apikey
-```
-
-**3. Add SEC filing PDFs** to `data/pdfs/` using this naming pattern:
+**2. Add SEC filing PDFs** to `data/pdfs/` using this naming pattern:
 ```
 nvda-20250126.pdf   (ticker-YYYYMMDD.pdf)
 tsla-20241231.pdf
@@ -102,21 +96,11 @@ goog-20241231.pdf
 ```
 Download free from [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar).
 
-**4. Launch the app**
+**3. Launch the app**
 ```bash
 streamlit run streamlit_app.py
 ```
 Then click **Run Ingestion Pipeline** in the sidebar.
-
----
-
-## 🔑 Free API Keys Needed
-
-| Service | Purpose | Free Limit | Link |
-|---|---|---|---|
-| Google Gemini | LLM answers | 1,500 req/day | [Get key](https://aistudio.google.com/app/apikey) |
-
-Embeddings run **locally** — no API key needed.
 
 ---
 
