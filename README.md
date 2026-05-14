@@ -65,10 +65,9 @@ data/pdfs/  (SEC Filing PDFs)
 
 ## 📁 Project Structure
 
-```
 financial-rag-assistant/
-├── data/pdfs/                     # Place SEC filing PDFs here
-├── chroma_db/                     # Auto-created vector database
+├── data/pdfs/
+├── chroma_db/                    
 ├── src/
 │   ├── ingestion/pyspark_processor.py
 │   ├── embeddings/chroma_store.py

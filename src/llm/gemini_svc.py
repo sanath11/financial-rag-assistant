@@ -32,7 +32,7 @@ def _init_gemini():
 
 # ── System Prompt ─────────────────────────────────────────────────────────────
 SYSTEM_PROMPT = """You are a senior financial analyst assistant with expertise in 
-reading SEC filings (10-K, 10-Q), earnings call transcripts, and financial reports.
+reading SEC filings (10-K), earnings call transcripts, and financial reports.
 
 Your role is to answer questions accurately using ONLY the provided document excerpts.
 
@@ -216,3 +216,68 @@ def generate_answer_stream(
 
     except Exception as e:
         yield f"❌ Error: {e}"
+
+
+def generate_suggested_questions(tickers: list[str], years: list[str]) -> list[str]:
+    """
+    Ask Gemini to generate 5 relevant questions based on available tickers and years.
+    Falls back to generic questions if the API call fails.
+    """
+    if not _gemini_ready:
+        _init_gemini()
+
+    tickers_str = ", ".join(tickers) if tickers else "various companies"
+    years_str   = ", ".join(sorted(years)) if years else "recent years"
+
+    prompt = f"""You are helping users explore SEC 10-K filings.
+The database contains filings for these companies: {tickers_str}
+Filing years available: {years_str}
+
+Generate exactly 5 specific, interesting questions a financial analyst would ask.
+Rules:
+- Reference specific company names or tickers from the list above
+- Mix single-company and cross-company comparison questions
+- Focus on: risks, revenue, growth, strategy, competition, guidance
+- Keep each question under 15 words
+- Return ONLY a numbered list 1-5, no extra text
+
+Example format:
+1. What risks did NVDA highlight in their 2024 filing?
+2. Compare TSLA and AAPL revenue growth strategies"""
+
+    try:
+        model    = genai.GenerativeModel(GEMINI_MODEL)
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.9,     # Higher = more varied questions
+                max_output_tokens=300,
+            ),
+        )
+        # Parse numbered list from response
+        lines     = response.text.strip().splitlines()
+        questions = []
+        for line in lines:
+            line = line.strip()
+            if line and line[0].isdigit():
+                # Strip "1. " prefix
+                q = line.split(".", 1)[-1].strip()
+                if q:
+                    questions.append(q)
+
+        return questions[:5] if len(questions) >= 3 else _fallback_questions(tickers)
+
+    except Exception:
+        return _fallback_questions(tickers)
+
+
+def _fallback_questions(tickers: list[str]) -> list[str]:
+    """Generic questions used if Gemini call fails."""
+    t = tickers[0] if tickers else "the company"
+    return [
+        f"What risks did {t} mention in their latest filing?",
+        f"Summarize {t}'s revenue and profitability",
+        "Compare AI investment strategies across companies",
+        "What forward guidance was provided?",
+        "How does management describe competitive positioning?",
+    ]

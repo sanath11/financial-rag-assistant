@@ -102,27 +102,13 @@ def render_header():
     )
 
 
-# ── Example Questions ─────────────────────────────────────────────────────────
-
-EXAMPLE_QUESTIONS = [
-    "What risks did NVIDIA mention in their latest filing?",
-    "Summarize Tesla's revenue and profitability in 2024",
-    "Compare Google and NVIDIA's AI investment strategies",
-    "What guidance did Tesla provide for the next quarter?",
-    "How does NVIDIA describe competition in the GPU market?",
-    "What are Google's main sources of revenue?",
-]
-
-def render_example_questions() -> str | None:
-    """
-    Render clickable example questions.
-    Returns the question text if one is clicked, else None.
-    """
-    st.markdown("**💡 Try these questions:**")
+def render_example_questions(questions: list[str]) -> str | None:
+    st.markdown("**💡 Suggested questions:**")
     cols = st.columns(2)
-    for i, question in enumerate(EXAMPLE_QUESTIONS):
+    for i, question in enumerate(questions):
         col = cols[i % 2]
-        if col.button(question, key=f"example_{i}", use_container_width=True):
+        key = f"example_{i}_{hash(question) % 10000}"   # unique per question content
+        if col.button(question, key=key, use_container_width=True):
             return question
     return None
 
@@ -195,8 +181,9 @@ def render_chat_message(role: str, content: str, sources: list[dict] | None = No
 
 
 def init_chat_history():
-    """Initialize session state for chat history."""
     if "messages" not in st.session_state:
         st.session_state.messages = []
     if "sources_map" not in st.session_state:
-        st.session_state.sources_map = {}   # Maps message index → source chunks
+        st.session_state.sources_map = {}
+    if "suggested_questions_rendered" not in st.session_state:
+        st.session_state["suggested_questions_rendered"] = False
