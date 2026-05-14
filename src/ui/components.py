@@ -97,7 +97,7 @@ def render_header():
     """Render the main page header and description."""
     st.title("📈 SEC Financial Assistant")
     st.caption(
-        "Ask questions about SEC filings (10-K/10-Q) for NVDA, TSLA, GOOG and more. "
+        "Ask questions about SEC filings (10-K) for MAG 7 companies. "
         "Answers are grounded in actual filings with source citations."
     )
 

@@ -29,7 +29,7 @@ data/pdfs/  (SEC Filing PDFs)
                ▼
 ┌─────────────────────────────┐
 │  Embeddings + Vector Store  │  src/embeddings/chroma_store.py
-│  • sentence-transformers    │  all-MiniLM-L6-v2 (local, free)
+│  • sentence-transformers    │  BAAI/bge-small-en-v1.5
 │  • ChromaDB upsert          │  Persistent local vector DB
 │  • Metadata indexing        │  ticker, year, page, source
 └──────────────┬──────────────┘
@@ -94,7 +94,7 @@ nvda-20250126.pdf   (ticker-YYYYMMDD.pdf)
 tsla-20241231.pdf
 goog-20241231.pdf
 ```
-Downloaded from [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar).
+Downloaded from [SEC EDGAR](https://www.sec.gov/edgar/search/).
 
 **3. Launch the app**
 ```bash
