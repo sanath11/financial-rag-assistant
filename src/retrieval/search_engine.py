@@ -16,6 +16,10 @@ from src.embeddings.chroma_store import (
     EMBEDDING_MODEL,
 )
 
+def expand_query(query: str) -> str:
+    """Prepend context so embeddings align better with SEC filing language."""
+    return f"financial SEC filing annual report: {query}"
+
 
 # ── Core Search ───────────────────────────────────────────────────────────────
 def semantic_search(
@@ -38,9 +42,10 @@ def semantic_search(
 
     # Embed the query
     query_embedding = model.encode(
-        [query],
-        normalize_embeddings=True,
-    )[0].tolist()
+    [expand_query(query)],
+    normalize_embeddings=True,
+)[0].tolist()
+
 
     # Build metadata filter
     where_filter = _build_filter(tickers, years)
@@ -173,7 +178,9 @@ def retrieve_and_answer(
     from src.llm.gemini_svc import generate_answer, generate_answer_stream
 
     # Retrieve
-    chunks = semantic_search(question, tickers=tickers, years=years, top_k=top_k)
+    chunks = semantic_search(question, tickers=tickers, years=years, top_k=top_k * 2)
+    chunks = [c for c in chunks if c["score"] >= 0.55]   # Drop low-quality chunks
+    chunks = chunks[:top_k]
     chunks = deduplicate_chunks(chunks)
 
     if not chunks:

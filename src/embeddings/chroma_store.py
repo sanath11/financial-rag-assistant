@@ -21,7 +21,7 @@ from sentence_transformers import SentenceTransformer
 # ── Config ────────────────────────────────────────────────────────────────────
 CHROMA_DB_PATH      = "chroma_db"
 COLLECTION_NAME     = "financial_sec_filings"
-EMBEDDING_MODEL     = "all-MiniLM-L6-v2"   # Fast, free, no API key needed
+EMBEDDING_MODEL     = "BAAI/bge-small-en-v1.5"
 EMBEDDING_BATCH_SIZE = 64
 
 

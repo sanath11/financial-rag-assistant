@@ -92,8 +92,8 @@ def chunk_text(text: str) -> list[str]:
     """
     if not text:
         return []
-    chunk_size = 1000
-    overlap    = 100
+    chunk_size = 500
+    overlap    = 75
     chunks     = []
     for i in range(0, len(text), chunk_size - overlap):
         chunk = text[i : i + chunk_size].strip()
