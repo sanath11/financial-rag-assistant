@@ -43,14 +43,14 @@ data/pdfs/  (SEC Filing PDFs)
 └──────────────┬──────────────┘
                │  Top-K relevant chunks
                ▼
-┌──────────────────────────────────────────────────────────┐
-│  LLM Answer Generation                                   │
-│  • Gemini 2.5 Flash (Google) — 1,500 req/day free      │  src/llm/gemini_svc.py
-│  • Llama 3.3 70B (Groq) — ~1,440 req/day free           │  src/llm/groq_svc.py
-│  • Qwen 2.5 (OpenRouter) — free/sponsored endpoints       │  src/llm/qwen_svc.py
-│  • Unified selector — switch at runtime via UI           │  src/llm/llm_selector.py
-│  • RAG + comparison prompt templates                     │
-│  • Streaming response + source citations                 │
+┌─────────────────────────────┐
+│  LLM Answer Generation      │  src/llm/
+│  • Gemini 2.5 Flash (Google)│  gemini_svc.py
+│  • Llama 3.3 70B (Groq)     │  groq_svc.py
+│  • Qwen 2.5 (OpenRouter)    │  qwen_svc.py
+│  • Unified model selector  │  llm_selector.py
+│  • RAG + comparison prompts │
+│  • Streaming + citations    │
 └──────────────┬──────────────┘
                │
                ▼
@@ -141,11 +141,11 @@ Set `LLM_PROVIDER` in `.env` to the default, or switch models live in the UI.
 
 ## 📦 Tech Stack
 
-| Component | Library |
+| Component | Technology |
 |---|---|
-| Distributed ingestion | PySpark 3.5 |
-| PDF extraction | PyMuPDF (fitz) |
-| Embeddings | sentence-transformers (BAAI/bge-small-en-v1.5) |
-| Vector DB | ChromaDB |
-| LLM | Gemini 1.5 Flash / Llama 3.3 70B / Qwen 2.5 |
-| UI | Streamlit |
+| Distributed processing | PySpark 3.5 |
+| PDF text extraction | PyMuPDF (fitz) |
+| Embedding model | sentence-transformers — BAAI/bge-small-en-v1.5 |
+| Vector store | ChromaDB |
+| LLMs (free tier) | Gemini 2.5 Flash, Llama 3.3 70B (Groq), Qwen 2.5 (OpenRouter) |
+| Web UI | Streamlit |
