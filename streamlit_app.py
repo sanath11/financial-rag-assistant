@@ -34,8 +34,8 @@ def load_available_filters():
     return get_available_tickers(), get_available_years()
 
 @st.cache_data(ttl=300)
-def load_suggested_questions(tickers: tuple, years: tuple) -> list[str]:
-    from src.llm.gemini_svc import generate_suggested_questions
+def load_suggested_questions(tickers: tuple, years: tuple, model: str = "gemini") -> list[str]:
+    from src.llm.llm_selector import generate_suggested_questions
     return generate_suggested_questions(list(tickers), list(years))
 
 # ── Ingestion Pipeline ────────────────────────────────────────────────────────
@@ -75,6 +75,11 @@ def main():
     stats   = load_db_stats()
     render_db_stats(stats)
 
+    # ── Set active LLM provider ───────────────────────────────────────────────
+    if filters.get("model"):
+        from src.llm.llm_selector import set_provider, get_provider
+        set_provider(filters["model"])
+
     if render_ingestion_sidebar():
         run_ingestion_pipeline()
         return
@@ -97,6 +102,7 @@ def main():
         questions = load_suggested_questions(
             tickers=tuple(available_tickers),
             years=tuple(available_years),
+            model=filters["model"],
         )
         st.markdown("**💡 Suggested questions:**")
         cols = st.columns(2)

@@ -175,7 +175,7 @@ def retrieve_and_answer(
     Returns:
         (answer_str, source_chunks) or (generator, source_chunks) if stream=True
     """
-    from src.llm.gemini_svc import generate_answer, generate_answer_stream
+    from src.llm.llm_selector import generate_answer, generate_answer_stream
 
     # Retrieve
     chunks = semantic_search(question, tickers=tickers, years=years, top_k=top_k * 2)

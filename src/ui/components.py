@@ -60,6 +60,21 @@ def render_sidebar(available_tickers: list[str], available_years: list[str]) -> 
         help="Display the exact document excerpts used to generate the answer",
     )
 
+    # ── Model Selector ──────────────────────────────────────────────────────────
+    st.sidebar.subheader("🤖 LLM Model")
+    model_options = {
+        "gemini": "Gemini 2.5 Flash (Google)",
+        "llama": "Llama 3.3 70B (Groq)",
+        "qwen": "Qwen 2.5 (OpenRouter)",
+    }
+    selected_model = st.sidebar.selectbox(
+        "Select model",
+        options=list(model_options.keys()),
+        format_func=lambda k: model_options[k],
+        index=0,
+        help="Switch between free-tier LLM providers",
+    )
+
     st.sidebar.divider()
 
     return {
@@ -67,6 +82,7 @@ def render_sidebar(available_tickers: list[str], available_years: list[str]) -> 
         "selected_years":   selected_years or None,
         "top_k":            top_k,
         "show_sources":     show_sources,
+        "model":            selected_model,
     }
 
 
