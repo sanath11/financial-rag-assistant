@@ -64,7 +64,7 @@ data/pdfs/  (SEC Filing PDFs)
 ---
 
 ## 📁 Project Structure
-
+```
 financial-rag-assistant/
 ├── data/pdfs/
 ├── chroma_db/                    
