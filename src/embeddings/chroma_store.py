@@ -149,19 +149,26 @@ def embed_and_store(spark_df, batch_size: int = EMBEDDING_BATCH_SIZE) -> int:
 
 def get_collection_stats() -> dict:
     """Return summary of what's currently stored in ChromaDB."""
-    client     = get_chroma_client()
-    collection = get_or_create_collection(client)
-    count      = collection.count()
+    try:
+        client     = get_chroma_client()
+        collection = get_or_create_collection(client)
+        count      = collection.count()
+    except Exception:
+        # ChromaDB version mismatch or corrupted DB — return empty
+        return {"total_chunks": 0, "tickers": [], "years": []}
 
     stats = {"total_chunks": count, "tickers": [], "years": []}
 
     if count > 0:
-        # Sample metadata to find tickers/years
-        sample = collection.get(limit=min(count, 1000), include=["metadatas"])
-        tickers = sorted(set(m["ticker"] for m in sample["metadatas"]))
-        years   = sorted(set(m["year"]   for m in sample["metadatas"]))
-        stats["tickers"] = tickers
-        stats["years"]   = years
+        try:
+            # Sample metadata to find tickers/years
+            sample = collection.get(limit=min(count, 1000), include=["metadatas"])
+            tickers = sorted(set(m["ticker"] for m in sample["metadatas"]))
+            years   = sorted(set(m["year"]   for m in sample["metadatas"]))
+            stats["tickers"] = tickers
+            stats["years"]   = years
+        except Exception:
+            pass
 
     return stats
 

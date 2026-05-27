@@ -9,7 +9,7 @@ sentence-transformers==3.0.1
 torch==2.3.1                    # CPU-only is fine for inference
 
 # ── Vector Store ─────────────────────────────────────────────
-chromadb==0.5.3
+chromadb>=0.6.0  # Upgraded to fix sqlite3 seq_id compatibility
 
 # ── LLM ──────────────────────────────────────────────────────
 google-generativeai==0.7.2      # Gemini 2.5 Flash — free tier, 1500 req/day
