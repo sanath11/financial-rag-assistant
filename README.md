@@ -64,18 +64,30 @@ data/pdfs/  (SEC Filing PDFs)
 ---
 
 ## 📁 Project Structure
+
 ```
 financial-rag-assistant/
-├── data/pdfs/
-├── chroma_db/                    
+├── data/pdfs/                    SEC filing PDFs (naming: {ticker}-{YYYYMMDD}.pdf)
+├── chroma_db/                    Persistent ChromaDB vector database
 ├── src/
-│   ├── ingestion/pyspark_processor.py
-│   ├── embeddings/chroma_store.py
-│   ├── llm/gemini_svc.py
-│   ├── retrieval/search_engine.py
-│   └── ui/components.py
+│   ├── ingestion/
+│   │   └── pyspark_processor.py  PDF text extraction, chunking, Spark DataFrame
+│   ├── embeddings/
+│   │   └── chroma_store.py       Sentence-transformers → ChromaDB with metadata
+│   ├── llm/
+│   │   ├── llm_selector.py       Unified interface, switch providers at runtime
+│   │   ├── gemini_svc.py         Gemini 2.5 Flash (Google)
+│   │   ├── groq_svc.py           Llama 3.3 70B (Groq)
+│   │   └── qwen_svc.py           Qwen 2.5 (OpenRouter)
+│   ├── retrieval/
+│   │   └── search_engine.py      Cosine similarity, metadata filtering, dedup
+│   └── ui/
+│       └── components.py         Streamlit UI components, sidebar, citations
 ├── requirements.txt
-└── streamlit_app.py
+├── .env                          API keys for all LLM providers
+├── README.md
+├── CLAUDE.md                      Project instructions for Claude Code
+└── streamlit_app.py              Main entry point
 ```
 
 ---
